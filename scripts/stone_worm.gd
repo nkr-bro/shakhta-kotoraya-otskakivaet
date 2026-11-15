@@ -127,6 +127,8 @@ func slam() -> void:
 	tw.tween_property(self, "anim_lift", -40.0, 0.4).set_trans(Tween.TRANS_SINE)
 	tw.tween_property(self, "anim_lift", 30.0, 0.15).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	tw.tween_property(self, "anim_lift", 0.0, 0.6)
+	if not is_inside_tree():
+		return
 	await get_tree().create_timer(0.55, false).timeout
 
 

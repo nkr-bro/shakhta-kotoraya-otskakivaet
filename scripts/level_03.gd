@@ -103,10 +103,14 @@ func _expose() -> void:
 	var t := 0.0
 	var dur: float = EXPOSE_TIME[phase]
 	while fighting and t < dur and not _phase_hit:
+		if not is_inside_tree():
+			return
 		await get_tree().physics_frame
 		t += get_physics_process_delta_time()
 	# let a wave already in flight finish before the crack closes
 	while fighting and wave_active and not _phase_hit:
+		if not is_inside_tree():
+			return
 		await get_tree().physics_frame
 	if fighting and not _phase_hit:
 		worm.set_exposed(false)
@@ -144,6 +148,8 @@ func _blast(origins: Array, dur: float) -> void:
 	while t < dur and fighting:
 		worm.charge = t / dur
 		worm.charge2 = t / dur if origins.size() > 1 else 0.0
+		if not is_inside_tree():
+			return
 		await get_tree().physics_frame
 		t += get_physics_process_delta_time()
 	if not fighting:
@@ -202,6 +208,8 @@ func _rockfall() -> void:
 ## so the shot has to be found again.
 func _knock_miner() -> void:
 	while wave_active:
+		if not is_inside_tree():
+			return
 		await get_tree().physics_frame
 	var choices := []
 	for i in MINER_SPOTS.size():

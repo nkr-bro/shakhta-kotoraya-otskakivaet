@@ -48,6 +48,8 @@ func _tutorial() -> void:
 	set_objective("3. Направь волну в фиксатор: пунктир должен уйти в трещину к красному фиксатору")
 	var t := 0.0
 	while t < 4.0 and not _aimed and input_enabled:
+		if not is_inside_tree():
+			return
 		await get_tree().process_frame
 		t += get_process_delta_time()
 	if latch.active:

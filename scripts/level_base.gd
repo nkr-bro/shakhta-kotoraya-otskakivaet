@@ -236,6 +236,8 @@ func fire() -> void:
 	var collider: Object = res[1]
 	var bounces: int = w.bounce_count
 	var mult := (2 if w.boosted else 1) * maxi(1, streak + 1)
+	if not is_inside_tree():
+		return
 	await get_tree().create_timer(0.15, false).timeout
 	for r in reflectors:
 		r.locked = false
@@ -432,4 +434,6 @@ func toast(t: String, dur := 2.4) -> void:
 
 
 func wait(sec: float) -> void:
+	if not is_inside_tree():
+		return
 	await get_tree().create_timer(sec, false).timeout

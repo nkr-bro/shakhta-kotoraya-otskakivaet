@@ -62,12 +62,18 @@ func swing() -> void:
 	busy = true
 	Sfx.play("swing", -2.0)
 	spr.frame = 4
+	if not is_inside_tree():
+		return
 	await get_tree().create_timer(0.11, false).timeout
 	spr.frame = 5
+	if not is_inside_tree():
+		return
 	await get_tree().create_timer(0.15, false).timeout
 	spr.frame = 6
 	Sfx.play("strike", -3.0)
 	struck.emit()
+	if not is_inside_tree():
+		return
 	await get_tree().create_timer(0.28, false).timeout
 	spr.frame = 7
 	busy = false
@@ -76,6 +82,8 @@ func swing() -> void:
 func cheer() -> void:
 	spr.frame = 5
 	_cheer = 1.0
+	if not is_inside_tree():
+		return
 	await get_tree().create_timer(1.0, false).timeout
 	if not busy:
 		spr.frame = 7
