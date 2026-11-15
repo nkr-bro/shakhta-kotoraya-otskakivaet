@@ -1,0 +1,43 @@
+PASS chapter 1 playable
+PASS L1 target active
+PASS L1: no direct line from the pickaxe to the latch
+PASS L1 starting angle misses (fails=1)
+PASS R restores crystal angle
+PASS dragging handle turns crystal smoothly (-35.0 -> -15.0)
+PASS L1 solvable: 2.0
+PASS click selects crystal CrystalA
+PASS Q/E rotates CrystalA to 2.0° (now 2.00°)
+PASS click sets aim
+PASS L1 latch hit by real ricochet
+PASS hero did not move
+PASS L1 rune playable
+PASS L1 rune solvable: -48.0
+PASS click selects crystal CrystalA
+PASS Q/E rotates CrystalA to -48.0° (now -48.00°)
+PASS click sets aim
+PASS L1 rune lit
+PASS chapter 2 playable
+PASS L2: hanging beam blocks the direct line to the crack
+PASS L2 stage 1 solvable: -0.5
+PASS click selects crystal CrystalA
+PASS Q/E rotates CrystalA to -0.5° (now -0.50°)
+PASS click sets aim
+PASS L2 wall weak point hit
+PASS L2 stage 2 playable
+PASS L2 power socket active
+PASS L2: socket not reachable directly
+PASS L2 stage 2: no single-reflection solution (boulder blocks)
+PASS L2 stage 2 solvable with two reflections: [[CrystalA:<Node2D#423389824752>, 20.5], [CrystalB:<Node2D#423406601988>, -24.5]]
+PASS click selects crystal CrystalA
+PASS Q/E rotates CrystalA to 20.5° (now 20.50°)
+PASS click selects crystal CrystalB
+PASS Q/E rotates CrystalB to -24.5° (now -24.50°)
+PASS click sets aim
+PASS L2 socket hit
+PASS L2 rune playable
+PASS L2 rune solvable: -8.5
+PASS click selects crystal CrystalA
+PASS Q/E rotates CrystalA to -8.5° (now -8.50°)
+PASS click sets aim
+PASS L2 rune lit
+DONE failures=0

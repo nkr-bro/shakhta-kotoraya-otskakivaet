@@ -1,0 +1,10 @@
+# Godot
+.godot/
+*.import.tmp
+# builds and packages (web build is published on itch.io / releases)
+build/
+dist/
+# test output and local tooling
+tests/screens/
+.claude/
+.DS_Store
