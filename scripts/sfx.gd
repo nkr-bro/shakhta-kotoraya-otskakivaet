@@ -10,7 +10,6 @@ var pool: Array[AudioStreamPlayer] = []
 var ambient: AudioStreamPlayer
 var unlocked := false
 var _last_play := {}
-var voice_player: AudioStreamPlayer
 var music_player: AudioStreamPlayer
 
 
@@ -27,8 +26,6 @@ func _ready() -> void:
 	ambient.volume_db = -6.0
 	ambient.finished.connect(func(): ambient.play())
 	add_child(ambient)
-	voice_player = AudioStreamPlayer.new()
-	add_child(voice_player)
 	music_player = AudioStreamPlayer.new()
 	music_player.volume_db = -5.0
 	music_player.finished.connect(func(): if music_player.stream: music_player.play())
@@ -63,21 +60,6 @@ func play(sound: String, volume_db := 0.0, pitch := 1.0) -> void:
 			p.pitch_scale = pitch
 			p.play()
 			return
-
-
-## Plays the recorded Russian line for a dialogue text, if one exists.
-func voice(text: String) -> void:
-	voice_player.stop()
-	if not unlocked:
-		return
-	var path := "res://assets/voice/%s.wav" % text.md5_text().substr(0, 12)
-	if ResourceLoader.exists(path):
-		voice_player.stream = load(path)
-		voice_player.play()
-
-
-func stop_voice() -> void:
-	voice_player.stop()
 
 
 func music(sound: String) -> void:

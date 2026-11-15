@@ -397,7 +397,6 @@ func dialogue(lines: Array) -> void:
 		dlg_name.text = str(line[0])
 		dlg_text.text = str(line[1])
 		dlg_text.visible_ratio = 0.0
-		Sfx.voice(dlg_text.text)
 		_typing = true
 		var tw := create_tween()
 		tw.tween_property(dlg_text, "visible_ratio", 1.0, maxf(0.25, dlg_text.text.length() * 0.022))
@@ -409,7 +408,6 @@ func dialogue(lines: Array) -> void:
 			_typing = false
 			if not _skip:
 				await _advance
-	Sfx.stop_voice()
 	dlg.visible = false
 	dlg_catcher.visible = false
 	_in_dialogue = false
