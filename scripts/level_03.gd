@@ -12,9 +12,9 @@ extends LevelBase
 
 const PHASE_GOALS := [
 	"",
-	"Фаза 1/3. После атаки червь выдыхается — бей рикошетом в трещину под аркой тела (3 удара)",
-	"Фаза 2/3. Трещина под челюстью. Червь гасит фонари и сбивает кристалл (3 удара)",
-	"Фаза 3/3. Червь в ярости! Трещина у основания шеи, двойные залпы (3 удара)",
+	"Phase 1/3. After attacking the worm tires — ricochet into the crack under its body arch (3 hits)",
+	"Phase 2/3. Crack under the jaw. The worm puts out lanterns and knocks the crystal (3 hits)",
+	"Phase 3/3. The worm is furious! Crack at the base of the neck, double volleys (3 hits)",
 ]
 const ATTACKS := [[], ["blast", "rocks", "spin"], ["blast", "dark", "rocks", "spin"], ["double", "spin", "rocks", "dark", "double"]]
 var worm_hp := 9
@@ -55,9 +55,9 @@ func begin() -> void:
 	await worm.roar()
 	game.shake(10.0, 0.6)
 	await say([
-		["Брат", "Брат! Ты пришёл! Червь обвился вокруг подъёмника — мы не можем сесть в клеть!"],
-		["Шахтёр", "Его броню волна не пробьёт. Но после каждого рывка он выдыхается — и трещины раскрываются."],
-		["Брат", "Щит подъёмника выдержит три удара. Поворачивай малый кристалл у клети, чтобы отбивать залпы!"],
+		["Brother", "You came! The worm is coiled around the lift — we can't get into the cage!"],
+		["Miner", "The wave can't pierce its armor. But after every attack it tires — and its cracks open."],
+		["Brother", "The lift's shield can take three hits. Turn the small crystal by the cage to deflect volleys!"],
 	])
 	elevator.set_shield(true)
 	_update_hp()
@@ -79,7 +79,7 @@ func _set_phase(p: int) -> void:
 
 
 func _update_hp() -> void:
-	game.hud.set_hp("Червь: %d/9   Щит подъёмника: %d/3" % [maxi(0, worm_hp), elevator.hp])
+	game.hud.set_hp("Worm: %d/9   Lift shield: %d/3" % [maxi(0, worm_hp), elevator.hp])
 
 
 func _fight_loop() -> void:
@@ -99,7 +99,7 @@ func _fight_loop() -> void:
 func _expose() -> void:
 	_phase_hit = false
 	worm.set_exposed(true)
-	toast("Червь выдохся — трещина раскрыта! Бей!", 1.6)
+	toast("The worm is tired — crack exposed! Strike!", 1.6)
 	var t := 0.0
 	var dur: float = EXPOSE_TIME[phase]
 	while fighting and t < dur and not _phase_hit:
@@ -141,9 +141,9 @@ func _blast(origins: Array, dur: float) -> void:
 	telegraphing = true
 	Sfx.play("charge")
 	if dur > 6.0:
-		toast("Червь заряжает залп по подъёмнику! Поверни малый кристалл поперёк красной линии", 5.0)
+		toast("The worm charges a volley at the lift! Turn the small crystal across the red line", 5.0)
 	elif origins.size() > 1:
-		toast("Двойной залп!", 1.6)
+		toast("Double volley!", 1.6)
 	var t := 0.0
 	while t < dur and fighting:
 		worm.charge = t / dur
@@ -177,7 +177,7 @@ func _blast(origins: Array, dur: float) -> void:
 		if is_instance_valid(orb) and orb.alive:
 			var res: Array = await orb.finished
 			if fighting and not (res[1] is Node and (res[1] as Node).is_in_group("shield")):
-				toast("Залп отбит!", 1.2)
+				toast("Volley deflected!", 1.2)
 
 
 func _clear_tele() -> void:
@@ -189,7 +189,7 @@ func _clear_tele() -> void:
 
 
 func _rockfall() -> void:
-	toast("Червь бьёт хвостом — обвал!", 1.6)
+	toast("The worm slams its tail — cave-in!", 1.6)
 	await worm.slam()
 	game.shake(14.0, 0.7)
 	Sfx.play("crumble")
@@ -221,13 +221,13 @@ func _knock_miner() -> void:
 	input_enabled = false
 	await miner.knocked_to(MINER_SPOTS[spot])
 	aim_dir = (crystal_a.global_position - miner.strike_origin()).normalized()
-	toast("Шахтёра отбросило обвалом! Найди новый угол удара", 2.4)
+	toast("The cave-in threw the miner! Find a new strike angle", 2.4)
 	input_enabled = was and fighting
 
 
 ## The worm lashes the big crystal and sends it spinning to a new angle.
 func _spin_crystal() -> void:
-	toast("Червь хлестнул хвостом — большой кристалл раскручен!", 2.0)
+	toast("The worm lashed its tail — the big crystal is spinning!", 2.0)
 	await worm.lunge()
 	game.shake(6.0, 0.3)
 	Sfx.play("ricochet", 0.0, 0.6)
@@ -242,7 +242,7 @@ func _spin_crystal() -> void:
 ## Roar puts out the lanterns: the aiming preview shrinks for a while.
 func _darkness() -> void:
 	await worm.roar()
-	toast("Червь погасил фонари! Предпросмотр укоротился", 2.2)
+	toast("The worm put out the lanterns! The preview is shorter", 2.2)
 	if dark_layer == null:
 		dark_layer = CanvasModulate.new()
 		dark_layer.color = Color(1, 1, 1)
@@ -297,7 +297,7 @@ func on_target_hit(t: Node) -> void:
 		fails += 1
 		fails_changed.emit(fails)
 		Sfx.play("miss")
-		toast("Прицел верный, но трещина закрыта — бей, когда червь выдохнется после атаки", 2.4)
+		toast("Good aim, but the crack is closed — strike when the worm tires after an attack", 2.4)
 		return
 	_phase_hit = true
 	worm.set_exposed(false)
@@ -311,7 +311,7 @@ func on_target_hit(t: Node) -> void:
 	miner.cheer()
 	_update_hp()
 	if worm_hp > 0 and hits_in_phase < 3:
-		toast("Трещина расширяется! Ещё %d" % (3 - hits_in_phase), 1.8)
+		toast("The crack widens! %d more" % (3 - hits_in_phase), 1.8)
 		Sfx.play("roar", -6.0, 1.3)
 		return
 	hits_in_phase = 0
@@ -322,10 +322,10 @@ func on_target_hit(t: Node) -> void:
 		await worm.roar()
 		if phase == 1:
 			await worm.move_to_pose(Vector2(-30, -60), -10.0)
-			await say([["Брат", "Есть! Панцирь треснул! Он поднимает голову — целься ниже челюсти!"]])
+			await say([["Brother", "Yes! The shell cracked! It's raising its head — aim below the jaw!"]])
 		else:
 			await worm.move_to_pose(Vector2(-60, -20), 6.0)
-			await say([["Шахтёр", "Он в ярости! Ещё одна трещина — и он уйдёт под землю!"]])
+			await say([["Miner", "It's furious! One more crack — and it'll retreat underground!"]])
 		_set_phase(phase + 1)
 		input_enabled = true
 	else:
@@ -336,7 +336,7 @@ func _on_damaged(hp: int) -> void:
 	_update_hp()
 	game.shake(8.0, 0.4)
 	if hp > 0:
-		toast("Щит подъёмника повреждён!")
+		toast("Lift shield damaged!")
 
 
 func _on_lost() -> void:
@@ -347,9 +347,9 @@ func _on_lost() -> void:
 	input_enabled = false
 	_clear_tele()
 	set_objective("")
-	game.hud.show_overlay("Щит разрушен", "Червь пробил защиту подъёмника. Попробуй ещё раз: поворачивай малый кристалл поперёк красной линии атаки.", [
-		{"text": "Начать бой заново", "accent": true, "cb": func(): game.hud.hide_overlay(); game.restart_level()},
-		{"text": "В главное меню", "cb": game.go_menu},
+	game.hud.show_overlay("Shield destroyed", "The worm broke the lift's shield. Try again: turn the small crystal across the red attack line.", [
+		{"text": "Restart the fight", "accent": true, "cb": func(): game.hud.hide_overlay(); game.restart_level()},
+		{"text": "Main menu", "cb": game.go_menu},
 	])
 
 
@@ -372,7 +372,7 @@ func _victory() -> void:
 	Sfx.play("victory")
 	elevator.set_shield(false)
 	await say([
-		["Брат", "Он уходит под землю! Все в клеть, быстро!"],
+		["Brother", "It's going underground! Everyone into the cage, quick!"],
 	])
 	Sfx.play("machine")
 	var tw := create_tween()
@@ -391,6 +391,6 @@ func _victory() -> void:
 		tw2.tween_property(n, "position:y", n.position.y - 902.0, 3.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	await tw2.finished
 	await say([
-		["Шахтёр", "Подъёмник наверху. Теперь моя очередь — по лестнице к свету."],
+		["Miner", "The lift is up. Now it's my turn — up the ladder to the light."],
 	])
 	completed.emit()

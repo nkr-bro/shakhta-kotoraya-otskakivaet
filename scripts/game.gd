@@ -4,9 +4,9 @@ extends Node
 const PAR := [2, 3, 6]   # shots for three stars
 const LEVELS := ["res://scenes/Level01.tscn", "res://scenes/Level02.tscn", "res://scenes/Level03.tscn"]
 const CARDS := [
-	["res://assets/art/reference1.png", "Глава 1. Вход в шахту", "Рабочие добывали странные кристаллы и разбудили каменного червя. Обвал отрезал их от выхода."],
-	["res://assets/art/reference3.png", "Глава 2. Рабочий за завалом", "Внизу, за пропастью, кто-то стучит в каменную стену."],
-	["res://assets/art/reference2.png", "Глава 3. Каменный червь", "Брат и рабочие ждут у подъёмника. Червь не даёт им уйти."],
+	["res://assets/art/reference1.png", "Chapter 1. Mine Entrance", "Miners dug up strange crystals and woke a stone worm. A cave-in cut them off from the exit."],
+	["res://assets/art/reference3.png", "Chapter 2. Worker Behind the Rubble", "Down below, across the chasm, someone is knocking on a stone wall."],
+	["res://assets/art/reference2.png", "Chapter 3. The Stone Worm", "Your brother and the workers wait at the lift. The worm won't let them leave."],
 ]
 
 @onready var holder: Node2D = $LevelHolder
@@ -46,14 +46,14 @@ func start_chapter(i: int, with_card := true) -> void:
 	level.game = self
 	holder.add_child(level)
 	level.objective_changed.connect(hud.set_goal)
-	level.fails_changed.connect(func(n): hud.btn_hint.disabled = n < LevelBase.HINT_AFTER; if n == LevelBase.HINT_AFTER: toast("Доступна подсказка: она покажет больше траектории"))
+	level.fails_changed.connect(func(n): hud.btn_hint.disabled = n < LevelBase.HINT_AFTER; if n == LevelBase.HINT_AFTER: toast("Hint available: it shows more of the trajectory"))
 	level.completed.connect(_on_level_completed)
 	level.score_changed.connect(hud.set_score)
 	level.streak_changed.connect(hud.set_streak)
 	hud.set_streak(0)
 	hud.set_score(0, 0, level.gems_total)
 	hud.btn_hint.disabled = true
-	hud.btn_hint.text = "Подсказка"
+	hud.btn_hint.text = "Hint"
 	await hud.fade_to(0.0, 0.6)
 	playing = true
 	hud.set_play_ui(true)
@@ -70,7 +70,7 @@ func restart_level() -> void:
 func _on_hint() -> void:
 	if level:
 		level.toggle_hint()
-		hud.btn_hint.text = "Подсказка: вкл" if level.hint_on else "Подсказка"
+		hud.btn_hint.text = "Hint: on" if level.hint_on else "Hint"
 
 
 func rating_for(shots: int) -> int:
@@ -89,14 +89,14 @@ func _on_level_completed() -> void:
 	playing = false
 	hud.set_play_ui(false)
 	Sfx.play("victory", -4.0)
-	var star_txt := "Звёзд: %d из 3   Очки: %d   Самоцветы: %d/%d" % [rating, level.score + rating * 500, level.gems_got, level.gems_total]
+	var star_txt := "Stars: %d of 3   Score: %d   Gems: %d/%d" % [rating, level.score + rating * 500, level.gems_got, level.gems_total]
 	Save.record(chapter, level.score + rating * 500, level.gems_got)
-	var best := "  Новый рекорд!" if rating > was_best and was_best > 0 else ""
+	var best := "  New record!" if rating > was_best and was_best > 0 else ""
 	var res_done := [false]
-	hud.show_overlay("Глава %d пройдена" % (chapter + 1), "%s\nУдаров: %d (для трёх звёзд — не больше %d)%s" % [star_txt, shots, PAR[chapter], best], [
-		{"text": "Дальше", "accent": true, "cb": func(): res_done[0] = true},
-		{"text": "Кузница (самоцветов: %d)" % Save.wallet, "cb": func(): hud.root.add_child(Forge.build(func(): pass))},
-		{"text": "Переиграть главу", "cb": func(): res_done[0] = true; hud.hide_overlay(); restart_level()},
+	hud.show_overlay("Chapter %d complete" % (chapter + 1), "%s\nStrikes: %d (3 stars at %d or fewer)%s" % [star_txt, shots, PAR[chapter], best], [
+		{"text": "Next", "accent": true, "cb": func(): res_done[0] = true},
+		{"text": "Forge (gems: %d)" % Save.wallet, "cb": func(): hud.root.add_child(Forge.build(func(): pass))},
+		{"text": "Replay chapter", "cb": func(): res_done[0] = true; hud.hide_overlay(); restart_level()},
 	])
 	while not res_done[0]:
 		await get_tree().process_frame
@@ -119,13 +119,13 @@ func show_ending() -> void:
 	await hud.fade_to(0.0, 0.8)
 	Sfx.play("victory")
 	await say([
-		["Брат", "Мы на поверхности. Все живы — и всё благодаря тебе."],
-		["Механик", "Подъёмник выдержал. А червь ещё долго будет зализывать панцирь."],
-		["Шахтёр", "Три удара — и мы дома."],
+		["Brother", "We're on the surface. Everyone's alive — all thanks to you."],
+		["Mechanic", "The lift held. And the worm will be licking its shell for a long time."],
+		["Miner", "Three knocks — and we're home."],
 	])
-	hud.show_overlay("Конец", "Шахтёры выбрались на поверхность.", [
-		{"text": "Новая игра", "accent": true, "cb": func(): hud.hide_overlay(); end.queue_free(); hud.fade.color.a = 1.0; start_chapter(0)},
-		{"text": "В главное меню", "cb": go_menu},
+	hud.show_overlay("The End", "The miners made it to the surface.", [
+		{"text": "New game", "accent": true, "cb": func(): hud.hide_overlay(); end.queue_free(); hud.fade.color.a = 1.0; start_chapter(0)},
+		{"text": "Main menu", "cb": go_menu},
 	])
 
 
@@ -170,9 +170,9 @@ func flash_miss() -> void:
 
 
 func out_of_charges() -> void:
-	hud.show_overlay("Кирка разрядилась", "Заряды кончились. Самоцветы дают +1 удар — собирай их рикошетами.", [
-		{"text": "Попробовать снова", "accent": true, "cb": func(): hud.hide_overlay(); restart_level()},
-		{"text": "В главное меню", "cb": go_menu},
+	hud.show_overlay("Pickaxe drained", "Out of charges. Gems give +1 strike — collect them with ricochets.", [
+		{"text": "Try again", "accent": true, "cb": func(): hud.hide_overlay(); restart_level()},
+		{"text": "Main menu", "cb": go_menu},
 	])
 
 

@@ -35,10 +35,10 @@ func begin() -> void:
 	Sfx.play("knocks")
 	await wait(1.6)
 	await say([
-		["Голос за стеной", "Эй! Кто там? Я механик, меня завалило!"],
-		["Шахтёр", "Держись! Кристалл внизу на вагонетке — поймаю момент и отражу волну в завал."],
+		["Voice behind the wall", "Hey! Who's there? I'm the mechanic, I'm trapped!"],
+		["Miner", "Hold on! The crystal below rides a mine cart — I'll time it and bounce the wave into the rubble."],
 	])
-	set_objective("Кристалл едет на вагонетке! Поймай момент и отрази волну в трещину завала")
+	set_objective("The crystal rides a mine cart! Time your strike and bounce the wave into the rubble's crack")
 	charges = 6 + (2 if Pickaxes.has("drill") else 0)
 	score_changed.emit(score, gems_got, gems_total)
 	input_enabled = true
@@ -60,8 +60,8 @@ func _break_wall() -> void:
 	wall.break_apart(weak.global_position)
 	await wall.broken
 	await say([
-		["Механик", "Свобода! Спасибо, парень. Твой брат с остальными — на дне шахты, у большого подъёмника."],
-		["Механик", "Эту клеть я подлатаю, но лебёдке нужен ток. Подожди-ка..."],
+		["Mechanic", "Free! Thanks, kid. Your brother and the others are at the bottom of the mine, by the big lift."],
+		["Mechanic", "I'll patch up this cage, but the winch needs power. Hold on..."],
 	])
 	var chunk := FallingRock.new()
 	chunk.radius = 34.0
@@ -80,14 +80,14 @@ func _break_wall() -> void:
 	create_tween().tween_property(crystal_b, "modulate:a", 1.0, 0.6)
 	Sfx.play("select")
 	await say([
-		["Механик", "Поставил тебе кристалл на нижний уступ. Щиток питания — под настилом, на опоре."],
-		["Механик", "Только глыба от завала застряла под уступом. Прямо волна не пройдёт — веди её через оба кристалла!"],
+		["Mechanic", "I put a crystal on the lower ledge for you. The power socket is under the deck, on the support."],
+		["Mechanic", "But a boulder from the rubble is stuck under the ledge. The wave can't go straight — guide it through both crystals!"],
 	])
 	socket.set_active(true)
 	charges = maxi(charges, 0) + 5
 	score_changed.emit(score, gems_got, gems_total)
 	stage = 2
-	set_objective("Дай питание: проведи волну через оба кристалла в щиток на опоре")
+	set_objective("Restore power: guide the wave through both crystals into the socket on the support")
 	input_enabled = true
 
 
@@ -104,14 +104,14 @@ func _power_on() -> void:
 	mechanic.mode = "cheer"
 	await wait(2.4)
 	await say([
-		["Механик", "Есть ток! Лебёдка крутится!"],
-		["Механик", "Подожди! Над пропастью руна-маяк. Зажги её — и лебёдка выдержит спуск."],
+		["Mechanic", "Power's on! The winch is turning!"],
+		["Mechanic", "Wait! There's a beacon rune above the chasm. Light it — and the winch will hold the descent."],
 	])
 	charges = maxi(charges, 0) + 4
 	score_changed.emit(score, gems_got, gems_total)
-	await move_miner(Vector2(90, 428), "Шахтёр отошёл к краю уступа — угол удара другой")
-	await run_challenge(Vector2(931, 391), "Задание 3: с нового места зажги руну над пропастью — вагонетка всё ещё едет!")
-	await say([["Механик", "Спускаемся к подъёмнику. Слышишь? Это червь. Он не даст им уйти..."]])
+	await move_miner(Vector2(90, 428), "The miner moved to the ledge edge — new strike angle")
+	await run_challenge(Vector2(931, 391), "Task 3: from the new spot, light the rune above the chasm — the cart is still moving!")
+	await say([["Mechanic", "Let's go down to the lift. Hear that? It's the worm. It won't let them leave..."]])
 	completed.emit()
 
 

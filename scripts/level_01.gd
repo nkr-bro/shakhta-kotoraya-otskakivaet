@@ -32,20 +32,20 @@ func begin() -> void:
 	Sfx.play("knocks")
 	await wait(1.2)
 	await say([
-		["Брат (стук из-под земли)", "Мы живы. Слышишь три удара — помоги нам выбраться."],
-		["Шахтёр", "Кирка задела кристалл — и пошла волна! Отражу её в фиксатор подъёмника."],
+		["Brother (knocking from below)", "We're alive. If you hear three knocks — help us get out."],
+		["Miner", "My pickaxe touched a crystal — and a wave came out! I'll bounce it into the lift's latch."],
 	])
 	input_enabled = true
 	_tutorial()
 
 
 func _tutorial() -> void:
-	set_objective("1. Выбери кристалл — щёлкни по нему")
+	set_objective("1. Select the crystal — click it")
 	await reflector_selected
-	set_objective("2. Поверни отражатель — тяни за ручку, колесо мыши или Q/E")
+	set_objective("2. Rotate the reflector — drag the handle, mouse wheel or Q/E")
 	await reflector_turned
 	await wait(1.2)
-	set_objective("3. Направь волну в фиксатор: пунктир должен уйти в трещину к красному фиксатору")
+	set_objective("3. Aim the wave at the latch: the dotted line must go through the crack to the red latch")
 	var t := 0.0
 	while t < 4.0 and not _aimed and input_enabled:
 		if not is_inside_tree():
@@ -53,7 +53,7 @@ func _tutorial() -> void:
 		await get_tree().process_frame
 		t += get_process_delta_time()
 	if latch.active:
-		set_objective("4. Нажми «Удар» (или пробел). Промах не страшен — поправь угол и бей снова")
+		set_objective("4. Press “Strike” (or Space). A miss is fine — adjust the angle and strike again")
 
 
 func on_target_hit(t: Node) -> void:
@@ -63,7 +63,7 @@ func on_target_hit(t: Node) -> void:
 	latch.set_active(false)
 	set_objective("")
 	miner.cheer()
-	toast("Фиксатор сбит!")
+	toast("Latch knocked off!")
 	var tw := create_tween().set_parallel()
 	tw.tween_property(clamp_sprite, "position", clamp_sprite.position + Vector2(30, 260), 0.9).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
 	tw.tween_property(clamp_sprite, "rotation", 3.5, 0.9)
@@ -78,11 +78,11 @@ func on_target_hit(t: Node) -> void:
 	Sfx.play("knocks")
 	await wait(1.6)
 	await say([
-		["Шахтёр", "Подъёмник пошёл вниз! Путь в нижнюю часть шахты открыт."],
-		["Брат (стук снизу)", "Три удара... Ниже нас за завалом остался механик. Без него подъёмник не починить."],
+		["Miner", "The lift is going down! The way to the lower mine is open."],
+		["Brother (knocking from below)", "Three knocks... The mechanic is trapped behind rubble below us. We can't fix the lift without him."],
 	])
-	await move_miner(Vector2(900, 273), "Шахтёр перепрыгнул на правый уступ — теперь бей отсюда")
-	await run_challenge(Vector2(705, 420), "Задание 2: с правого уступа зажги руну в полости под трещиной — рикошетом от кристалла")
+	await move_miner(Vector2(900, 273), "The miner jumped to the right ledge — strike from here now")
+	await run_challenge(Vector2(705, 420), "Task 2: from the right ledge, light the rune in the cavity under the crack — bounce off the crystal")
 	completed.emit()
 
 

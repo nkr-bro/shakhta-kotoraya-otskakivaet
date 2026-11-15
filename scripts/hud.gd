@@ -92,12 +92,12 @@ func _ready() -> void:
 	timer_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.add_child(timer_label)
 	btn_full = UiStyle.button(Button.new(), 20)
-	btn_full.text = "На весь экран (F)"
+	btn_full.text = "Fullscreen (F)"
 	btn_full.pressed.connect(toggle_fullscreen)
 	root.add_child(btn_full)
 
 	btn_pause = UiStyle.button(Button.new(), 22)
-	btn_pause.text = "Пауза"
+	btn_pause.text = "Pause"
 	btn_pause.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	btn_pause.position = Vector2(-120, 14)
 	btn_pause.pressed.connect(func(): pause_pressed.emit())
@@ -111,15 +111,15 @@ func _ready() -> void:
 	actions.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	actions.position = Vector2(-16, -16)
 	btn_hint = UiStyle.button(Button.new(), 22)
-	btn_hint.text = "Подсказка"
+	btn_hint.text = "Hint"
 	btn_hint.disabled = true
-	btn_hint.tooltip_text = "Станет доступна после четырёх промахов"
+	btn_hint.tooltip_text = "Unlocks after four misses"
 	btn_hint.pressed.connect(func(): hint_pressed.emit())
 	btn_reset = UiStyle.button(Button.new(), 22)
-	btn_reset.text = "Сброс (R)"
+	btn_reset.text = "Reset (R)"
 	btn_reset.pressed.connect(func(): reset_pressed.emit())
 	btn_strike = UiStyle.button(Button.new(), 30, true)
-	btn_strike.text = "Удар (пробел)"
+	btn_strike.text = "Strike (Space)"
 	btn_strike.pressed.connect(func(): strike_pressed.emit())
 	actions.add_child(btn_hint)
 	actions.add_child(btn_reset)
@@ -158,10 +158,10 @@ func _ready() -> void:
 	dlg_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	dlg_text.custom_minimum_size = Vector2(940, 70)
 	var row := HBoxContainer.new()
-	var hint := UiStyle.label("Щелчок / пробел — дальше", 16, Color(0.7, 0.7, 0.7))
+	var hint := UiStyle.label("Click / Space — next", 16, Color(0.7, 0.7, 0.7))
 	hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var skip := UiStyle.button(Button.new(), 18)
-	skip.text = "Пропустить"
+	skip.text = "Skip"
 	skip.pressed.connect(func(): _skip = true; _advance.emit())
 	row.add_child(hint)
 	row.add_child(skip)
@@ -211,16 +211,16 @@ func _ready() -> void:
 	# Pause
 	pause_panel = _make_modal()
 	var pv: VBoxContainer = pause_panel.get_meta("box")
-	pv.add_child(_center(UiStyle.label("Пауза", 40, Color(1.0, 0.85, 0.5))))
+	pv.add_child(_center(UiStyle.label("Pause", 40, Color(1.0, 0.85, 0.5))))
 	var b1 := UiStyle.button(Button.new(), 26, true)
-	b1.text = "Продолжить"
+	b1.text = "Continue"
 	b1.pressed.connect(func(): resume_pressed.emit())
 	pv.add_child(b1)
 	pv.add_child(_volume_row())
-	var help := UiStyle.label("Мышь: щелчок по кристаллу — выбрать, тянуть ручку — повернуть,\nколесо или Q/E — точно, Tab — следующий кристалл.\nЩелчок по сцене — направление удара. Пробел — удар, R — сброс.", 18, Color(0.8, 0.8, 0.8))
+	var help := UiStyle.label("Mouse: click a crystal to select, drag the handle to rotate,\nwheel or Q/E for fine control, Tab — next crystal.\nHold LMB on the scene to aim. Space — strike, R — reset.", 18, Color(0.8, 0.8, 0.8))
 	pv.add_child(help)
 	var b2 := UiStyle.button(Button.new(), 22)
-	b2.text = "В главное меню"
+	b2.text = "Main menu"
 	b2.pressed.connect(func(): menu_pressed.emit())
 	pv.add_child(b2)
 	root.add_child(pause_panel)
@@ -249,14 +249,14 @@ func _process(_d: float) -> void:
 	btn_full.visible = btn_pause.visible
 	var lv = get_parent().level if get_parent() and "level" in get_parent() else null
 	if lv and is_instance_valid(lv) and lv.input_enabled:
-		timer_label.text = "Время задания: %d с%s" % [int(lv.task_time), "  (бонус за скорость!)" if lv.task_time < 30.0 else ""]
+		timer_label.text = "Task time: %d s%s" % [int(lv.task_time), "  (speed bonus!)" if lv.task_time < 30.0 else ""]
 		timer_label.position = Vector2(20, root.size.y - 40)
 		timer_label.visible = true
 	else:
 		timer_label.visible = false
 	if absf(_shown_score - _target_score) > 0.5:
 		_shown_score = move_toward(_shown_score, _target_score, maxf(8.0, absf(_target_score - _shown_score) * 0.12))
-		score_label.text = "Очки: %d%s" % [int(_shown_score), _score_suffix]
+		score_label.text = "Score: %d%s" % [int(_shown_score), _score_suffix]
 	hp_label.position = Vector2(root.size.x - hp_label.size.x - 16, 66)
 	dlg.position = Vector2((root.size.x - dlg.size.x) * 0.5, root.size.y - dlg.size.y - 24)
 
@@ -308,10 +308,10 @@ func set_score(score: int, got: int, total: int) -> void:
 	var lv = get_parent().level if get_parent() and "level" in get_parent() else null
 	var ch := ""
 	if lv and lv.charges >= 0:
-		ch = "   Заряды кирки: %d" % lv.charges
+		ch = "   Pickaxe charges: %d" % lv.charges
 	_target_score = score
-	_score_suffix = "   Самоцветы: %d/%d%s" % [got, total, ch]
-	score_label.text = "Очки: %d%s" % [int(_shown_score), _score_suffix]
+	_score_suffix = "   Gems: %d/%d%s" % [got, total, ch]
+	score_label.text = "Score: %d%s" % [int(_shown_score), _score_suffix]
 	score_label.visible = true
 
 
@@ -331,7 +331,7 @@ func popup(text: String, world_pos: Vector2) -> void:
 
 func set_streak(n: int) -> void:
 	if n >= 2:
-		streak_label.text = "СЕРИЯ ×%d" % (n + 1)
+		streak_label.text = "STREAK ×%d" % (n + 1)
 		streak_label.pivot_offset = Vector2(90, 24)
 		var tw := create_tween()
 		streak_label.scale = Vector2(1.6, 1.6)

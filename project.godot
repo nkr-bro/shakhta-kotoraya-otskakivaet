@@ -10,8 +10,8 @@ config_version=5
 
 [application]
 
-config/name="Шахта, которая отскакивает"
-config/description="Головоломка о рикошетах энергетической волны."
+config/name="Bouncing Mine"
+config/description="A puzzle game about ricocheting energy waves."
 run/main_scene="res://scenes/MainMenu.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"

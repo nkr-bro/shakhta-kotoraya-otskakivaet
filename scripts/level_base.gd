@@ -246,7 +246,7 @@ func fire() -> void:
 		var speed_bonus := maxi(0, int(30.0 - task_time)) * 20
 		score += speed_bonus
 		if speed_bonus > 0 and game:
-			game.hud.popup("Скорость! +%d" % speed_bonus, collider.global_position + Vector2(0, -50))
+			game.hud.popup("Speed! +%d" % speed_bonus, collider.global_position + Vector2(0, -50))
 		streak += 1
 		streak_changed.emit(streak)
 		task_time = 0.0
@@ -256,7 +256,7 @@ func fire() -> void:
 		if game:
 			game.hit_stop()
 			game.hud.flash_hit()
-			game.hud.popup("Руна зажжена!  +%d" % (300 * maxi(1, bounces)), collider.global_position)
+			game.hud.popup("Rune lit!  +%d" % (300 * maxi(1, bounces)), collider.global_position)
 		challenge_hit.emit()
 	elif success and collider and collider.is_in_group("wave_target"):
 		var pts := 300 * maxi(1, bounces) * mult
@@ -267,7 +267,7 @@ func fire() -> void:
 			game.shake(7.0, 0.3)
 			game.hud.flash_hit()
 			if bounces >= 2:
-				game.hud.popup("Рикошет ×%d!  +%d" % [bounces, pts], collider.global_position)
+				game.hud.popup("Ricochet ×%d!  +%d" % [bounces, pts], collider.global_position)
 			else:
 				game.hud.popup("+%d" % pts, collider.global_position)
 		on_target_hit(collider)
@@ -275,7 +275,7 @@ func fire() -> void:
 		fails += 1
 		fails_changed.emit(fails)
 		if streak > 0 and game:
-			game.hud.popup("Серия прервана", miner.global_position + Vector2(0, -140))
+			game.hud.popup("Streak broken", miner.global_position + Vector2(0, -140))
 		streak = 0
 		streak_changed.emit(streak)
 		if game:
@@ -347,7 +347,7 @@ func _on_gem(g: Gem) -> void:
 		charges += 1
 	score_changed.emit(score, gems_got, gems_total)
 	if game:
-		game.hud.popup("Самоцвет %d/%d  +250%s" % [gems_got, gems_total, "  +1 удар" if charges >= 0 else ""], g.global_position)
+		game.hud.popup("Gem %d/%d  +250%s" % [gems_got, gems_total, "  +1 strike" if charges >= 0 else ""], g.global_position)
 
 
 func toggle_hint() -> void:

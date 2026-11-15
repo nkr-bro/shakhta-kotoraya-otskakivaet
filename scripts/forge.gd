@@ -26,10 +26,10 @@ static func build(on_close: Callable) -> Control:
 static func _fill(v: VBoxContainer, root: Control, on_close: Callable) -> void:
 	for c in v.get_children():
 		c.queue_free()
-	var t := UiStyle.label("Кузница", 40, Color(1.0, 0.8, 0.45))
+	var t := UiStyle.label("Forge", 40, Color(1.0, 0.8, 0.45))
 	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(t)
-	var w := UiStyle.label("Самоцветов в кошельке: %d   (собирай их рикошетами на уровнях)" % Save.wallet, 22, Color(0.6, 1.0, 0.9))
+	var w := UiStyle.label("Gems in wallet: %d   (collect them with ricochets in levels)" % Save.wallet, 22, Color(0.6, 1.0, 0.9))
 	w.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(w)
 	for pick in Pickaxes.LIST:
@@ -46,17 +46,17 @@ static func _fill(v: VBoxContainer, root: Control, on_close: Callable) -> void:
 		row.add_child(info)
 		var b := UiStyle.button(Button.new(), 20, Save.equipped == pick.id)
 		if Save.equipped == pick.id:
-			b.text = "В руках"
+			b.text = "Equipped"
 			b.disabled = true
 		elif Save.owned.has(pick.id):
-			b.text = "Взять"
+			b.text = "Equip"
 			b.pressed.connect(func():
 				Save.equipped = pick.id
 				Save.save_data()
 				Sfx.play("select")
 				_fill(v, root, on_close))
 		else:
-			b.text = "Выковать (%d)" % pick.cost
+			b.text = "Forge (%d)" % pick.cost
 			b.disabled = Save.wallet < pick.cost
 			b.pressed.connect(func():
 				if Save.wallet >= pick.cost:
@@ -70,7 +70,7 @@ static func _fill(v: VBoxContainer, root: Control, on_close: Callable) -> void:
 		row.add_child(b)
 		v.add_child(row)
 	var close := UiStyle.button(Button.new(), 24, true)
-	close.text = "Готово"
+	close.text = "Done"
 	close.pressed.connect(func():
 		root.queue_free()
 		on_close.call())

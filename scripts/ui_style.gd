@@ -60,10 +60,10 @@ static func volume_row() -> Control:
 	var mute := UiStyle.button(Button.new(), 20)
 	mute.toggle_mode = true
 	mute.button_pressed = not Save.muted
-	mute.text = "Звук: вкл" if not Save.muted else "Звук: выкл"
+	mute.text = "Sound: on" if not Save.muted else "Sound: off"
 	mute.toggled.connect(func(on):
 		Save.muted = not on
-		mute.text = "Звук: вкл" if on else "Звук: выкл"
+		mute.text = "Sound: on" if on else "Sound: off"
 		Sfx.apply_settings()
 		Save.save_data())
 	var s := HSlider.new()
@@ -78,6 +78,6 @@ static func volume_row() -> Control:
 		Sfx.apply_settings())
 	s.drag_ended.connect(func(_c): Save.save_data())
 	h.add_child(mute)
-	h.add_child(UiStyle.label("Громкость", 20))
+	h.add_child(UiStyle.label("Volume", 20))
 	h.add_child(s)
 	return h
